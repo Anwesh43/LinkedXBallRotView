@@ -200,4 +200,26 @@ class XBallRotView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : XBallRotView) {
+
+        private val animator : Animator = Animator(view)
+        private val xbr : XBallRot = XBallRot(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            xbr.draw(canvas, paint)
+            animator.animate {
+                xbr.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            xbr.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
