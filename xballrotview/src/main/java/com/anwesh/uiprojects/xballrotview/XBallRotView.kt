@@ -19,7 +19,7 @@ val scGap : Float = 0.05f
 val scDiv : Double = 0.51
 val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
-val foreColor : Int = Color.parseColor("283593")
+val foreColor : Int = Color.parseColor("#283593")
 val backColor : Int = Color.parseColor("#BDBDBD")
 val rFactor : Float = 3.2f
 
@@ -36,7 +36,7 @@ fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b)
 fun Canvas.drawXRotBall(sc1 : Float, sc2 : Float, size : Float, paint : Paint) {
     for (j in 0..(lines - 1)) {
         save()
-        rotate(45f * sc1.divideScale(j, lines))
+        rotate(45f * sc1.divideScale(j, lines) * (1f - 2 * j))
         drawLine(0f, -size, 0f, size, paint)
         drawBall(sc2.divideScale(j, lines), size, paint)
         restore()
