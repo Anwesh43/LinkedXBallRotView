@@ -223,4 +223,13 @@ class XBallRotView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : XBallRotView {
+            val view : XBallRotView = XBallRotView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
