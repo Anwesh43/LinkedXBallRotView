@@ -14,13 +14,14 @@ import android.content.Context
 
 val nodes : Int = 5
 val lines : Int = 2
-val balls : Int = 4
+val balls : Int = 2
 val scGap : Float = 0.05f
 val scDiv : Double = 0.51
 val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("283593")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val rFactor : Float = 3.2f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -31,3 +32,38 @@ fun Float.mirrorValue(a : Int, b : Int) : Float {
     return (1 - k) * a.inverse() + k * b.inverse()
 }
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+
+fun Canvas.drawXRotBall(sc1 : Float, sc2 : Float, size : Float, paint : Paint) {
+    for (j in 0..(lines - 1)) {
+        save()
+        rotate(45f * sc1.divideScale(j, lines))
+        drawLine(0f, -size, 0f, size, paint)
+        drawBall(sc2.divideScale(j, lines), size, paint)
+        restore()
+    }
+}
+
+fun Canvas.drawBall(sc : Float, size : Float, paint : Paint) {
+    for (j in 0..(balls - 1)) {
+        save()
+        translate(0f, size * (1 - 2 * j) * sc.divideScale(j, balls))
+        drawCircle(0f, 0f, size / rFactor, paint)
+        restore()
+    }
+}
+
+fun Canvas.drawXBRNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    paint.color = foreColor
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    save()
+    translate(w / 2, gap * (i + 1))
+    drawXRotBall(sc1, sc2, size, paint)
+    restore()
+}
